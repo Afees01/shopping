@@ -1,26 +1,18 @@
-// To parse this JSON data, do
-//
-//     final shoppingResModel = shoppingResModelFromJson(jsonString);
-
 import 'dart:convert';
 
-List<ShoppingResModel> shoppingResModelFromJson(String str) =>
-    List<ShoppingResModel>.from(
-        json.decode(str).map((x) => ShoppingResModel.fromJson(x)));
+List<ProductModel> productModelFromJson(String str) => List<ProductModel>.from(
+    json.decode(str).map((x) => ProductModel.fromJson(x)));
 
-String shoppingResModelToJson(List<ShoppingResModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
-class ShoppingResModel {
+class ProductModel {
   int? id;
   String? title;
   double? price;
   String? description;
-  Category? category;
+  String? category;
   String? image;
   Rating? rating;
 
-  ShoppingResModel({
+  ProductModel({
     this.id,
     this.title,
     this.price,
@@ -30,13 +22,12 @@ class ShoppingResModel {
     this.rating,
   });
 
-  factory ShoppingResModel.fromJson(Map<String, dynamic> json) =>
-      ShoppingResModel(
+  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["id"],
         title: json["title"],
         price: json["price"]?.toDouble(),
         description: json["description"],
-        category: categoryValues.map[json["category"]]!,
+        category: json["category"],
         image: json["image"],
         rating: json["rating"] == null ? null : Rating.fromJson(json["rating"]),
       );
@@ -46,20 +37,11 @@ class ShoppingResModel {
         "title": title,
         "price": price,
         "description": description,
-        "category": categoryValues.reverse[category],
+        "category": category,
         "image": image,
         "rating": rating?.toJson(),
       };
 }
-
-enum Category { ELECTRONICS, JEWELERY, MEN_S_CLOTHING, WOMEN_S_CLOTHING }
-
-final categoryValues = EnumValues({
-  "electronics": Category.ELECTRONICS,
-  "jewelery": Category.JEWELERY,
-  "men's clothing": Category.MEN_S_CLOTHING,
-  "women's clothing": Category.WOMEN_S_CLOTHING
-});
 
 class Rating {
   double? rate;
@@ -79,16 +61,4 @@ class Rating {
         "rate": rate,
         "count": count,
       };
-}
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }
